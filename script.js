@@ -70,7 +70,7 @@ function displayPokemons () {
             <div class="pokemon-card" style="background: #705898;">
                 <img src="images/${pokeball.img}" alt=${name}>
                     <h2>${pokeball.name}</h2>
-                    <div>Type : ${pokeball.type}</div>
+                    <div>Type : ${types.join('/')}</div>
                     <div>Niveau : ${pokeball.level}</div>
             </div>
         `;
