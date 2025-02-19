@@ -48,33 +48,34 @@ const pokemons = [
     { name: 'Mewtwo', type: 'Psy', level: 70, img: 'mewtwo.png' }
 ];
 
-/**
- * Affiche le nom des pokémons dans la <div class="pokemon-container">
- */
+// Le container de Pokémons
+const pokemonContainer = document.querySelector('.pokemon-container');
+console.log(pokemonContainer);
+
+
+
+// Fonction qui affiche les Pokémon dans le container
 function displayPokemons () {
-    // Récupération de l'élément HTML <div class="pokemon-container">
-    const divContainer = document.querySelector('.pokemon-container');
-
-    // Vide le contenu du container
-    divContainer.innerHTML = '';
-
-    // Si tableau est vide, si la taille est de 0
-    if(!pokemonsTab.length) {
-        divContainer.innerHTML = "<p>Dracaufeu a tout brûlé, aucun Pokémon ne correspond à ta recherche !</p>";
-        return; // Sort de la fonction
+    // Si le tableau est vide on affiche un message d'erreur
+    if(pokemons.length < 1) {
+        pokemonContainer.innerHTML = '<p>Dracaufeu a tout brûlé, aucun Pokémon ne correspond à ta recherche !</p>';
+        return; // Stopper l'exécution de la fonction
     }
 
-    let resHTML = '';
-    // Pour chaque pokémon du tableau pokemons
-    for (let pokemon of pokemonsTab) {
-        // Ajoute à la fin (+=) un <p> avec le nom du Pokémon
-        resHTML += `<p>${pokemons.name}</p>`;
+    // Parcourir le tableau de Pokémon et créer
+    // un paragraph pour chaque Pokémon avec son nom
+    for(let pokeball of pokemons) {
+        const types = pokeball.type.split(',');
+        pokemonContainer.innerHTML += `
+            <div class="pokemon-card" style="background: #705898;">
+                <img src="images/${pokeball.img}" alt=${name}>
+                    <h2>${pokeball.name}</h2>
+                    <div>Type : ${pokeball.type}</div>
+                    <div>Niveau : ${pokeball.level}</div>
+            </div>
+        `;
     }
-    // resHTML est créé pour n'appeler qu'une fois innerHTML
-    // innerHTML est très gourmand en traitements, car il analyse
-    // la chaine de caractères pour créer les éléments HTML
-    divContainer.innerHTML = resHTML;
 }
 
-// Appelle la fonction displayPokemons()
+// Appeler la fonction pour afficher les Pokémon
 displayPokemons();
