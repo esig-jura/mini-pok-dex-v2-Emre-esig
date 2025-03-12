@@ -50,28 +50,56 @@ const pokemons = [
 
 // Le container de Pokémons
 const pokemonContainer = document.querySelector('.pokemon-container');
-console.log(pokemonContainer);
+const searchBar = document.getElementById('search-bar');
 
 
+// Fonction qui filtre et trie les Pokémon
+function filterAndSortPokemons() {
+    // Récupérer la valeur de la barre de recherche en minuscule
+    let searchValue = searchBar.value.toLowerCase();
+    // Retourne tous les pokemon dont le nom contient la valeur de recherche
+    let pokemonsTrouves = pokemons.filter(pokemonParcouru => pokemonParcouru.name.toLowerCase().includes(searchValue));
+    // Réaffiche les pokémons
+    displayPokemons(pokemonsTrouves);
+}
 
 // Fonction qui affiche les Pokémon dans le container
-function displayPokemons () {
+// Par défaut, le tableau de Pokémon à afficher est le tableau complet
+function displayPokemons (pokemonsAAfficher = pokemons) {
+    // Supprime les pokémons déjà affichés
+    pokemonContainer.innerHTML = '';
+
     // Si le tableau est vide on affiche un message d'erreur
-    if(pokemons.length < 1) {
+    if(pokemonsAAfficher.length < 1) {
         pokemonContainer.innerHTML = '<p>Dracaufeu a tout brûlé, aucun Pokémon ne correspond à ta recherche !</p>';
         return; // Stopper l'exécution de la fonction
     }
 
     // Parcourir le tableau de Pokémon et créer
     // un paragraph pour chaque Pokémon avec son nom
-    for(let pokeball of pokemons) {
-        const types = pokeball.type.split(',');
+    for(let pokeball of pokemonsAAfficher) {
+        // Récupérer les types du Pokémon parcouru dans un tableau
+        const tabTypes = pokeball.type.split(',');
+        // La couleur de fond est celle du premier type
+        let couleurFond = typeColors[tabTypes[0]] || DEFAULT_COLOR;
+
+        // Test si le pokémon plusieurs types
+        // S'il a plusieurs types, on change la couleur de fond par un dégradé
+        if (tabTypes.length > 1) {
+            // Crée un dégradé de couleur pour les pokémons avec plusieurs types
+            couleurFond = `linear-gradient(to right,
+                            ${typeColors[tabTypes[0]] || DEFAULT_COLOR} 50%,
+                            ${typeColors[tabTypes[1]] || DEFAULT_COLOR} 50%
+                           );`
+        }
+
+        // Ajout les pokemons dans le container
         pokemonContainer.innerHTML += `
-            <div class="pokemon-card" style="background: #705898;">
-                <img src="images/${pokeball.img}" alt=${name}>
-                    <h2>${pokeball.name}</h2>
-                    <div>Type : ${types.join('/')}</div>
-                    <div>Niveau : ${pokeball.level}</div>
+            <div class="pokemon-card" style="background: ${couleurFond};">
+                <img src="images/${pokeball.img}" alt="${pokeball.name}">
+                <h2>${pokeball.name}</h2>
+                <div>Type: ${tabTypes.join(' / ')}</div>
+                <div>Niveau: ${pokeball.level}</div>
             </div>
         `;
     }
@@ -79,3 +107,6 @@ function displayPokemons () {
 
 // Appeler la fonction pour afficher les Pokémon
 displayPokemons();
+
+// Ajouter un écouteur d'événement sur la barre de recherche
+searchBar.addEventListener('input', filterAndSortPokemons);
